@@ -17,14 +17,12 @@
 
 <script>
 import useAuthStore from "../storage/useAuthStore.js"
-import {useRouter, useRoute} from 'vue-router'
-import {ref} from "vue"
+import {useRoute} from 'vue-router'
 import MenuView from "./MenuView.vue";
 
 export default {
   components: {MenuView},
   setup() {
-    const router = useRouter();
     const route = useRoute()
 
     const authStore = useAuthStore()
