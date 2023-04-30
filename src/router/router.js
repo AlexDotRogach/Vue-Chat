@@ -51,7 +51,7 @@ const routes = [
       {
         name: "messages",
         path: "messages/:chatId",
-        component: () => import("../components/MessagesView.vue"),
+        component: () => import("../components/message/MessagesView.vue"),
       },
     ],
   },

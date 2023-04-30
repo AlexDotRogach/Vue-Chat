@@ -48,12 +48,12 @@ import {ref} from 'vue'
 import useAuthStore from "../storage/useAuthStore.js";
 import useDbStorage from "../storage/useDbStorage.js";
 import toast from "../utils/toast.js";
-import {deleteUser} from "firebase/auth";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
 
 export default {
   setup() {
     const router = useRouter();
+    const route = useRoute()
     const authStore = useAuthStore()
     const dbStorage = useDbStorage()
     const {sendResetToEmail, getInfoUser, updatePhotoUser, deleteAccount} = authStore;
@@ -92,6 +92,8 @@ export default {
       if (!img.target.complete) return;
 
       updatePhotoUser(photoUrl.value).then(() => {
+        dbStorage.updateNewPhotoUserMessages(photoUrl.value, route.params.userId)
+        
         loader.value.photo = false;
         toast.success(`Картинка успешно обновлена`)
       }).catch(() => {

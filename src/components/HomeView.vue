@@ -18,7 +18,7 @@
 <script>
 import useAuthStore from "../storage/useAuthStore.js"
 import {useRoute} from 'vue-router'
-import MenuView from "./MenuView.vue";
+import MenuView from "./part/MenuPart.vue";
 
 export default {
   components: {MenuView},

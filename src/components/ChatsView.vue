@@ -35,7 +35,7 @@ import {onMounted, onUnmounted, watch} from "vue"
 import {useRoute} from "vue-router";
 import useDbStorage from "../storage/useDbStorage.js";
 import useAuthStore from "../storage/useAuthStore.js";
-import HeaderView from "./HeaderView.vue";
+import HeaderView from "./part/HeaderPart.vue";
 import toast from "../utils/toast.js";
 
 export default {

@@ -1,5 +1,6 @@
 <template>
-  <header class="d-flex align-center justify-end pr-5">
+  <header class="d-flex align-center justify-space-between pr-5">
+    <span class="amountChats">Кол-во чатов: {{ dbStorage.chats.length }}</span>
     <v-btn @click="toggleDialog">
       Создать чат
     </v-btn>
@@ -9,19 +10,21 @@
 
 <script>
 import {ref} from "vue"
-import DialogCreateChatView from "./DialogCreateChatView.vue";
+import DialogCreateChatView from "../dialog/DialogCreateChat.vue";
+import useDbStorage from "../../storage/useDbStorage.js";
 
 export default {
   components: {DialogCreateChatView},
   setup() {
+    const dbStorage = useDbStorage();
     const isDialog = ref(false)
-    const toggleDialog = () => {
-      isDialog.value = !isDialog.value
-    }
+    const toggleDialog = () => isDialog.value = !isDialog.value;
+
 
     return {
       toggleDialog,
-      isDialog
+      isDialog,
+      dbStorage
     }
   }
 }
@@ -37,5 +40,15 @@ header {
   background: var(--main-color-elements);
   height: 60px;
   width: 100%;
+}
+
+.amountChats {
+  margin-left: 100px;
+}
+
+@media (max-width: 600px) {
+  .amountChats {
+    margin-left: 10px;
+  }
 }
 </style>

@@ -38,16 +38,15 @@
 </template>
 
 <script>
-import {ref} from "vue"
-import useAuthStore from "../storage/useAuthStore.js"
+import useAuthStore from "../../storage/useAuthStore.js"
 import {useRoute} from 'vue-router'
 
 export default {
   setup() {
     const authStore = useAuthStore()
     const user = authStore.getInfoUser;
-    const logOut = authStore.logOutUser
-    const route = useRoute()
+    const logOut = authStore.logOutUser;
+    const route = useRoute();
     const userId = route.params?.userId;
 
     const links = {

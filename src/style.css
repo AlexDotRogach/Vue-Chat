@@ -98,6 +98,10 @@ button:focus-visible {
     animation: loaderAnim 1s infinite;
 }
 
+.dark {
+    background: black !important;
+}
+
 @keyframes loaderAnim {
     0% {
         transform: rotate(30deg);

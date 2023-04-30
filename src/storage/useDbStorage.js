@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import {
   collection,
   getDocs,
@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import firestore from "../firebase/db/firestore";
-import { nanoid } from "nanoid";
+import {nanoid} from "nanoid";
 
 const settingStore = {
   state: () => ({
@@ -55,27 +55,85 @@ const settingStore = {
         this.chats = [...data];
       });
     },
-    async updateMessages({ text, userId, login, photo, chatId }) {
-      const chatRef = doc(this.firestore, "chats", chatId);
-
+    getChatRefDoc(chatId) {
+      return doc(this.firestore, "chats", chatId);
+    },
+    getChatById(chatId) {
       return new Promise((resolve) => {
         this.getChats.then(async (data) => {
           const currentChat = data.find((item) => item.id === chatId);
 
-          if (!currentChat) return;
+          resolve(currentChat ?? false);
+        });
+      });
+    },
+    async updateMessages({text, userId, login, photo, chatId}) {
+      return new Promise(async (resolve) => {
+        const currentChat = await this.getChatById(chatId);
 
-          await updateDoc(chatRef, {
-            messages: [
-              ...currentChat.data.messages,
-              {
-                id: nanoid(),
-                text,
-                createdBy: { userId, login, photo },
-              },
-            ],
-          });
+        if (!currentChat) return;
 
-          resolve();
+        await updateDoc(this.getChatRefDoc(chatId), {
+          messages: [
+            ...currentChat.data.messages,
+            {
+              id: nanoid(),
+              text,
+              createdBy: {userId, login, photo},
+            },
+          ],
+        });
+
+        resolve();
+      });
+    },
+    deleteMessage({chatId, messageId}) {
+      this.getChatById(chatId).then((currentChat) => {
+        if (!currentChat) return;
+
+        updateDoc(this.getChatRefDoc(chatId), {
+          messages: currentChat.data.messages.filter(
+              (message) => message.id !== messageId
+          ),
+        });
+      });
+    },
+    updateNewPhotoUserMessages(newUrl, userId) {
+      this.getChats.then((chats) => {
+        chats.forEach((chat) => {
+          if (chat.data.messages.length > 0) {
+            const newMessages = chat.data.messages.map((message) => {
+              if (message.createdBy.userId === userId) {
+                message.createdBy.photo = newUrl
+              }
+
+              return message
+            });
+
+            updateDoc(this.getChatRefDoc(chat.id), {
+              messages: [...newMessages],
+            });
+          }
+        });
+      });
+    },
+    updateMessageText({chatId, messageId, text}) {
+      this.getChatById(chatId).then((currentChat) => {
+        if (!currentChat) return;
+
+        const curMessageIndex = currentChat.data.messages.findIndex(
+            (message, index) => message.id === messageId
+        );
+
+        const newMessages = [...currentChat.data.messages];
+
+        newMessages.splice(curMessageIndex, 1, {
+          ...newMessages[curMessageIndex],
+          text,
+        });
+
+        updateDoc(this.getChatRefDoc(chatId), {
+          messages: [...newMessages],
         });
       });
     },

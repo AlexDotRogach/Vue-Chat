@@ -48,9 +48,9 @@
 
 <script>
 import {ref} from "vue"
-import useDbStorage from "../storage/useDbStorage.js";
-import useAuthStore from "../storage/useAuthStore.js";
-import toast from "../utils/toast"
+import useDbStorage from "../../storage/useDbStorage.js";
+import useAuthStore from "../../storage/useAuthStore.js";
+import toast from "../../utils/toast.js"
 
 export default {
   props: {
